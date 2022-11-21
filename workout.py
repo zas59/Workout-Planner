@@ -52,7 +52,7 @@ def handle_workout_selection():
     )
     json_data = response.json()
     workout_obj = json_data
-    chosenWorkout = ''
+    chosenWorkout = ""
     for workout in workout_obj:
         if str(form_data['chosenWorkout']) == str(workout['name']):
             chosenWorkout = workout['name']
