@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <style>
+        h1{text-align: center;}
+        h2{text-align: center;}
+        form{text-align: center;}
+    </style>
+</head>
+<body>
+ <h1>Available Workouts:</h1>
+ {% for workout in results %}
+    <h2>Name: {{workout['name']}}. Equipment Needed: {{workout['equipment']}}.</h2>
+ {% endfor %}
+
+ <form action="/handle_workout_selection" method="POST">
+    <label for="chosenWorkout">Which workout do you want to add? (type in full name of workout given above):</label>
+    <input type="text" id="chosenWorkout" name="chosenWorkout" value=""><br>
+    <input type="submit" value="Add Workout">
+ </form>
+</body>
+</html>

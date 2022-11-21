@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <style>
+        h1{text-align: center;}
+        form{text-align: center;}
+        p{text-align: center;}
+    </style>
+</head>
+<body>
+    <h1 style="font-weight: bold">Build Today's Workout</h1>
+    <form action="/handle_workout_search" method="POST">
+        <label for="targetArea">Target Area:</label>
+        <input type="text" id="targetArea" name="targetArea" value="">
+        <label for="difficulty">Difficulty:</label>
+        <input type="text" id="difficulty" name="difficulty" value=""><br>
+        <input type="submit" value="Find Workouts">
+    </form>
+    <p>Target Area Options: abdominals, abductors, adductors, biceps,
+                            calves, chest, forearms, glutes, hamstrings,
+                            lats, neck, quadriceps, traps, or triceps
+
+       Difficulty Options: beginner, intermediate, or expert  
+    </p>
+</body>
+</html>
