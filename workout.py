@@ -1,6 +1,7 @@
 '''Workout Planning App by Zach and Jake. Name TBD, TXST SWE, EIR Laith Hasanian.'''
 import random
 import os
+import psycopg2
 from urllib.parse import urlparse, urljoin
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -11,11 +12,81 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
+app.secret_key = 'super_secret_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URL')
+db = SQLAlchemy(app)
+
+class People(UserMixin, db.Model):
+    '''Table of Users'''
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(40), unique=True)
+
+    def __repr__(self) -> str:
+        return self.username
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    '''User Loader for flask_login'''
+    return People.query.get(int(user_id))
 
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    return render_template('search_workout.html')
+    return render_template('search_workout.html', login_link=url_for('login'), logout_link=url_for('logout'))
+
+@app.route('/login')
+def login():
+    '''Login form page'''
+    return render_template('login.html', signup_link=url_for('signup'))
+
+@app.route('/signup')
+def signup():
+    '''Display signup form'''
+    return render_template('signup.html', login_link = url_for('login'))
+
+@app.route('/logout')
+@login_required
+def logout():
+    '''Display logout option screen'''
+    logout_user()
+    return render_template('logout.html')
+
+@app.route('/handle_login', methods=['POST'])
+def handle_login():
+    '''Logs user in'''
+    valid_users = []
+    form_data = request.form
+    print(f'FORM DATA: {form_data}')
+    given_username = form_data['enter_username']
+    for person in People.query.all():
+        valid_users.append(person.username)
+    if given_username in valid_users:
+        this_user = People.query.filter_by(username=given_username).first()
+        login_user(this_user)
+        session['user'] = given_username
+        return redirect(url_for('find_workouts'))
+    else:
+        flash('Error: This username is does not exist')
+        return redirect(url_for('login'))
+
+@app.route('/handle_signup', methods=['POST'])
+def handle_signup():
+    '''Allows a user to create a new account with a given username'''
+    form_data = request.form
+    given_username = form_data['username']
+    existing = People.query.filter_by(username=given_username).first()
+    if existing:
+        flash('Error: This username already exists. User was not added.')
+        return redirect(url_for('login'))
+    else:
+        new_user = People(id=int(len(People.query.all())), username=given_username)
+        db.session.add(new_user)
+        db.session.commit()
+        flash(f'Created new user with username {repr(new_user)}')
+        return redirect(url_for('login'))
 
 @app.route('/handle_workout_search', methods=['GET', 'POST'])
 def handle_workout_search():

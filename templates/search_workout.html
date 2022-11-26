@@ -8,6 +8,12 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages () %}
+    {% if messages %} {% for message in messages %}
+    <b>{{message}}</b> 
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
     <h1 style="font-weight: bold">Build Today's Workout</h1>
     <form action="/handle_workout_search" method="POST">
         <label for="targetArea">Target Area:</label>
@@ -21,6 +27,8 @@
                             lats, neck, quadriceps, traps, or triceps
 
        Difficulty Options: beginner, intermediate, or expert  
-    </p>
+    </p><br>
+    <a href={{login_link}}> Login or Sign up</a><br>
+    <a href={{logout_link}}> Logout if logged in</a>
 </body>
 </html>
