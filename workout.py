@@ -26,7 +26,8 @@ class People(UserMixin, db.Model):
 
 class Workouts(db.Model):
     '''Table listing the target muscle(s) for a user in a workout session, and date.'''
-    username = db.Column(db.String(40), primary_key=True)
+    session_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(40))
     targets = db.Column(db.String(200))
     date = db.Column(db.String(100))
 
@@ -141,8 +142,8 @@ def end_workout():
     '''End the users workout session, store to database'''
     today = date.today()
     formatted_date = today.strftime("%B %d, %Y")
-    this_workout = Workouts(username=session['user'], targets=workout['today'],
-    date=formatted_date)
+    this_workout = Workouts(session_id=int(len(Workouts.query.all())),
+    username=session['user'], targets=workout['today'], date=formatted_date)
     db.session.add(this_workout)
     db.session.commit()
     logout_user()
