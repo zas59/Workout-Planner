@@ -14,7 +14,8 @@
     {% endfor %} 
     {% endif %}
     {% endwith %}
-    <h1 style="font-weight: bold">You have been logged out.</h1>
-    
-</body>
-</html>
+    <h1 style="font-weight: bold">Are you targeting another group this session?</h1>
+    <form action="/continue_response" method="POST">
+        <button type="submit" name="continue">Target another muscle group</button>
+        <button type="submit" name="end" formaction="/end_workout"> End Workout </button>
+     </form>

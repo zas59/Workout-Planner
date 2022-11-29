@@ -1,15 +1,15 @@
 '''Workout Planning App by Zach and Jake. Name TBD, TXST SWE, EIR Laith Hasanian.'''
-import random
 import os
-import psycopg2
-from urllib.parse import urlparse, urljoin
+from datetime import date
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
+workout = {}
+workout['today'] = ''
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_secret_key'
@@ -24,8 +24,15 @@ class People(UserMixin, db.Model):
     def __repr__(self) -> str:
         return self.username
 
+class Workouts(db.Model):
+    '''Table listing the target muscle(s) for a user in a workout session, and date.'''
+    username = db.Column(db.String(40), primary_key=True)
+    targets = db.Column(db.String(200))
+    date = db.Column(db.String(100))
+
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -35,7 +42,8 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    return render_template('search_workout.html', login_link=url_for('login'), logout_link=url_for('logout'))
+    return render_template('search_workout.html', login_link=url_for('login'),
+    logout_link=url_for('logout'))
 
 @app.route('/login')
 def login():
@@ -106,29 +114,39 @@ def handle_workout_search():
     )
     json_data = response.json()
     workouts_obj = json_data
-    return render_template('display_options.html', results = workouts_obj)
+    return render_template('display_options.html', results = workouts_obj,
+    target_area=form_data['targetArea'])
 
-@app.route('/handle_workout_selection', methods=['GET', 'POST'])
-def handle_workout_selection():
-    '''Handle a users selection of workouts'''
+@app.route('/handle_workout_submission', methods=['GET', 'POST'])
+@login_required
+def handle_workout_submission():
+    '''Handle a users report of their workout'''
     form_data = request.form
-    api_url = 'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises'
-    api_key = os.getenv('X_API_KEY')
-    headers = {
-	"X-RapidAPI-Key": api_key,
-	"X-RapidAPI-Host": "exercises-by-api-ninjas.p.rapidapi.com"
-    }
-    querystring = {'name': form_data['chosenWorkout']}
-    response = requests.get(
-        api_url,
-        headers=headers,
-        params=querystring
-    )
-    json_data = response.json()
-    workout_obj = json_data
-    chosen_workout = ""
-    for workout in workout_obj:
-        if str(form_data['chosenWorkout']) == str(workout['name']):
-            chosen_workout = workout['name']
-            return render_template('show_chosen_workout.html', workout = chosen_workout)
+    num_sets = form_data['sets']
+    target_area = form_data['target_area']
+    todays_workout = workout['today']
+    workout['today'] = f'{target_area} sets: {num_sets}. {todays_workout}'
+    flash(f'Added {target_area} to this workout.')
+    return render_template('continue_end.html')
+
+@app.route('/continue_response', methods=['POST'])
+@login_required
+def continue_response():
+    '''The user opted to continue the workout session'''
+    return render_template('multitarget_workout.html')
+
+@app.route('/end_workout', methods=['POST'])
+@login_required
+def end_workout():
+    '''End the users workout session, store to database'''
+    today = date.today()
+    formatted_date = today.strftime("%B %d, %Y")
+    this_workout = Workouts(username=session['user'], targets=workout['today'],
+    date=formatted_date)
+    db.session.add(this_workout)
+    db.session.commit()
+    logout_user()
+    flash(f'Saved workout from {formatted_date}')
+    return render_template('logout.html')
+
 app.run()
