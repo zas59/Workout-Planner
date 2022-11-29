@@ -14,7 +14,7 @@
     {% endfor %} 
     {% endif %}
     {% endwith %}
-    <h1 style="font-weight: bold">Build Today's Workout</h1>
+    <h1 style="font-weight: bold">Find more workouts</h1>
     <form action="/handle_workout_search" method="POST">
         <label for="targetArea">Target Area:</label>
         <input type="text" id="targetArea" name="targetArea" value="">
@@ -28,7 +28,9 @@
 
        Difficulty Options: beginner, intermediate, or expert  
     </p><br>
-    <a href={{login_link}}> Login or Sign up</a><br>
-    <a href={{logout_link}}> Logout if logged in</a>
+    <!-- TODO: Create 'End Workout' page, add link here-->
+    <form action="/end_workout" method="POST">
+        <input type="submit" value="End and Save Workout">
+    </form>
 </body>
 </html>

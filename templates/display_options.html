@@ -12,11 +12,16 @@
  {% for workout in results %}
     <h2>Name: {{workout['name']}}. Equipment Needed: {{workout['equipment']}}.</h2>
  {% endfor %}
-
- <form action="/handle_workout_selection" method="POST">
-    <label for="chosenWorkout">Which workout do you want to add? (type in full name of workout given above):</label>
-    <input type="text" id="chosenWorkout" name="chosenWorkout" value=""><br>
-    <input type="submit" value="Add Workout">
+<br>
+<h3>
+    Ready to submit this target area to your workout? (login required!)
+</h3>
+ <form action="/handle_workout_submission" method="POST">
+    <label for="target_area">Target Area: </label>
+    <input type="text" name="target_area" value="{{target_area}}" readonly><br>
+    <label for="sets">Number sets this session: </label>
+    <input type="text" id="sets" name="sets" value=""><br>
+    <input type="submit" value="Add Target Group">
  </form>
 </body>
 </html>

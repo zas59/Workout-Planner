@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <style>
+        h1{text-align: center;}
+        form{text-align: center;}
+        p{text-align: center;}
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages () %}
+    {% if messages %} {% for message in messages %}
+    <b>{{message}}</b> 
+    {% endfor %} 
+    {% endif %}
+    {% endwith %}
+    <h1 style="font-weight: bold">Please Login or Sign Up!</h1>
+    <form action="/handle_login" method="POST">
+        <label for="enter_username">New Username:</label>
+        <input type="text" id="enter_username" name="enter_username" value=""><br>
+        <input type="submit" value="Login">
+    </form>
+    <a href={{signup_link}}> Sign up here!</a>
+</body>
+</html>
