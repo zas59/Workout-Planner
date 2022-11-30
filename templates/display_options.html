@@ -5,16 +5,18 @@
         h1{text-align: center;}
         h2{text-align: center;}
         form{text-align: center;}
+        h3{text-align: center;}
+        body{text-align: center;}
     </style>
 </head>
 <body>
- <h1>Available Workouts:</h1>
+ <h1>Workouts for {{target_area}}:</h1>
  {% for workout in results %}
-    <h2>Name: {{workout['name']}}. Equipment Needed: {{workout['equipment']}}.</h2>
+    <h2>{{workout['name']}}. Equipment Needed: {{workout['equipment']}}.</h2>
  {% endfor %}
 <br>
 <h3>
-    Ready to submit this target area to your workout? (login required!)
+    Store set count for muscle group below (login required!)
 </h3>
  <form action="/handle_workout_submission" method="POST">
     <label for="target_area">Target Area: </label>

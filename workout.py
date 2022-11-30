@@ -26,10 +26,13 @@ class People(UserMixin, db.Model):
 
 class Workouts(db.Model):
     '''Table listing the target muscle(s) for a user in a workout session, and date.'''
-    session_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40))
     targets = db.Column(db.String(200))
     date = db.Column(db.String(100))
+
+    def __repr__(self) -> str:
+        return f'{self.date}: {self.targets}'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -43,8 +46,8 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    return render_template('search_workout.html', login_link=url_for('login'),
-    logout_link=url_for('logout'))
+    return render_template('search_workout.html', profile_link = url_for('profile'),
+    login_link=url_for('login'), logout_link=url_for('logout'))
 
 @app.route('/login')
 def login():
@@ -115,6 +118,8 @@ def handle_workout_search():
     )
     json_data = response.json()
     workouts_obj = json_data
+    for exercise in workouts_obj:
+        exercise['equipment'] = str(exercise['equipment']).replace("_", " ")
     return render_template('display_options.html', results = workouts_obj,
     target_area=form_data['targetArea'])
 
@@ -142,12 +147,23 @@ def end_workout():
     '''End the users workout session, store to database'''
     today = date.today()
     formatted_date = today.strftime("%B %d, %Y")
-    this_workout = Workouts(session_id=int(len(Workouts.query.all())),
+    this_workout = Workouts(id=int(len(Workouts.query.all())) + 1,
     username=session['user'], targets=workout['today'], date=formatted_date)
     db.session.add(this_workout)
     db.session.commit()
     logout_user()
     flash(f'Saved workout from {formatted_date}')
     return render_template('logout.html')
+
+@app.route('/profile')
+@login_required
+def profile():
+    '''Display a users workout history.'''
+    workout_history = Workouts.query.filter_by(username=session['user'])
+    formatted_workout_list = []
+    for workouts in workout_history:
+        formatted_workout_list.append(repr(workouts))
+    return render_template('profile.html', username=session['user'],
+    workout_history=formatted_workout_list, logout_link=url_for('logout'))
 
 app.run()

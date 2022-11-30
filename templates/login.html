@@ -5,6 +5,7 @@
         h1{text-align: center;}
         form{text-align: center;}
         p{text-align: center;}
+        body{text-align: center;}
     </style>
 </head>
 <body>
@@ -16,7 +17,7 @@
     {% endwith %}
     <h1 style="font-weight: bold">Please Login or Sign Up!</h1>
     <form action="/handle_login" method="POST">
-        <label for="enter_username">New Username:</label>
+        <label for="enter_username">Enter Username:</label>
         <input type="text" id="enter_username" name="enter_username" value=""><br>
         <input type="submit" value="Login">
     </form>
