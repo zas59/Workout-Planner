@@ -4,7 +4,7 @@ from datetime import date
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -34,6 +34,9 @@ class Workouts(db.Model):
     def __repr__(self) -> str:
         return f'{self.date}: {self.targets}'
 
+with app.app_context():
+    db.create_all()
+    
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -46,8 +49,19 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    return render_template('search_workout.html', profile_link = url_for('profile'),
-    login_link=url_for('login'), logout_link=url_for('logout'))
+    last_workout = 'No previous workouts. Login to see previous workout.'
+    return render_template('search_workout.html', login_link=url_for('login'),
+    logout_link=url_for('logout'), last_workout=last_workout)
+
+@app.route('/logged_in', methods=['GET', 'POST'])
+@login_required
+def find_workouts_logged_in():
+    '''Function for Landing Page if logged in'''
+    last_workout = 'No previous workouts'
+    if Workouts.query.filter_by(username=current_user.username):
+        last_workout = get_last_workout(current_user.username)
+    return render_template('search_workout.html', login_link=url_for('login'),
+    logout_link=url_for('logout'), last_workout=last_workout)
 
 @app.route('/login')
 def login():
@@ -79,7 +93,7 @@ def handle_login():
         this_user = People.query.filter_by(username=given_username).first()
         login_user(this_user)
         session['user'] = given_username
-        return redirect(url_for('find_workouts'))
+        return redirect(url_for('find_workouts_logged_in'))
     else:
         flash('Error: This username is does not exist')
         return redirect(url_for('login'))
@@ -139,7 +153,11 @@ def handle_workout_submission():
 @login_required
 def continue_response():
     '''The user opted to continue the workout session'''
-    return render_template('multitarget_workout.html')
+    last_workout = 'No previous workouts'
+    if Workouts.query.filter_by(username=current_user.username):
+        last_workout = get_last_workout(current_user.username)
+    return render_template('multitarget_workout.html', last_workout=last_workout)
+
 
 @app.route('/end_workout', methods=['POST'])
 @login_required
@@ -166,4 +184,14 @@ def profile():
     return render_template('profile.html', username=session['user'],
     workout_history=formatted_workout_list, logout_link=url_for('logout'))
 
-app.run()
+def get_last_workout(user):
+    all_user_workouts = Workouts.query.filter_by(username=user)
+    most_recent_workout = 0
+    for w in all_user_workouts:
+        if w.id > most_recent_workout:
+            most_recent_workout = w.id
+
+    workout_to_return = Workouts.query.filter_by(id = most_recent_workout)
+    return str(workout_to_return[0].targets)
+
+app.run(debug=True)

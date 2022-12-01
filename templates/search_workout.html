@@ -5,7 +5,7 @@
         h1{text-align: center;}
         form{text-align: center;}
         p{text-align: center;}
-        body{text-align: center;}
+        h2{text-align: center;}
     </style>
 </head>
 <body>
@@ -23,13 +23,12 @@
         <input type="text" id="difficulty" name="difficulty" value=""><br>
         <input type="submit" value="Find Workouts">
     </form>
-    <p>Target Area Options: abdominals, abductors, adductors, biceps,
-                            calves, chest, forearms, glutes, hamstrings,
-                            lats, neck, quadriceps, traps, or triceps
+    <p>Target Area Options: abdominals, abductors, adductors, biceps,</p>
+    <p>                     calves, chest, forearms, glutes, hamstrings,</p>
+    <p>                     lats, neck, quadriceps, traps, or triceps</p><br>
 
-       Difficulty Options: beginner, intermediate, or expert  
-    </p><br>
-    <a href={{profile_link}}>Workout History (login required!)</a>
+    <p>Difficulty Options: beginner, intermediate, or expert  </p><br>
+    <h2>Your last workout: {{last_workout}}</h2><br>
     <a href={{login_link}}> Login or Sign up</a><br>
     <a href={{logout_link}}> Logout if logged in</a>
 </body>
