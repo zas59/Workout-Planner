@@ -166,6 +166,7 @@ def end_workout():
     username=session['user'], targets=workout['today'], date=formatted_date)
     db.session.add(this_workout)
     db.session.commit()
+    workout['today'] = ''
     logout_user()
     flash(f'Saved workout from {formatted_date}')
     return render_template('logout.html')
