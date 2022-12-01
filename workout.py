@@ -50,8 +50,8 @@ def load_user(user_id):
 def find_workouts():
     '''Function for Landing Page'''
     last_workout = 'No previous workouts. Login to see previous workout.'
-    return render_template('search_workout.html', login_link=url_for('login'),
-    logout_link=url_for('logout'), last_workout=last_workout)
+    return render_template('search_workout.html', profile_link = url_for('profile'),
+    login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout)
 
 @app.route('/logged_in', methods=['GET', 'POST'])
 @login_required
@@ -60,8 +60,9 @@ def find_workouts_logged_in():
     last_workout = 'No previous workouts'
     if Workouts.query.filter_by(username=current_user.username):
         last_workout = get_last_workout(current_user.username)
-    return render_template('search_workout.html', login_link=url_for('login'),
-    logout_link=url_for('logout'), last_workout=last_workout)
+    return render_template('search_workout.html', profile_link = url_for('profile'),
+    login_link=url_for('login'), logout_link=url_for('logout'),
+    last_workout=last_workout)
 
 @app.route('/login')
 def login():
