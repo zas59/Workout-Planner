@@ -49,7 +49,7 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    last_workout = 'No previous workouts. Login to see previous workout.'
+    last_workout = 'Login to see previous workout.'
     return render_template('search_workout.html', profile_link = url_for('profile'),
     login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout)
 
@@ -57,9 +57,7 @@ def find_workouts():
 @login_required
 def find_workouts_logged_in():
     '''Function for Landing Page if logged in'''
-    last_workout = 'No previous workouts'
-    if Workouts.query.filter_by(username=current_user.username):
-        last_workout = get_last_workout(current_user.username)
+    last_workout = get_last_workout(current_user.username)
     return render_template('search_workout.html', profile_link = url_for('profile'),
     login_link=url_for('login'), logout_link=url_for('logout'),
     last_workout=last_workout)
@@ -154,9 +152,7 @@ def handle_workout_submission():
 @login_required
 def continue_response():
     '''The user opted to continue the workout session'''
-    last_workout = 'No previous workouts'
-    if Workouts.query.filter_by(username=current_user.username):
-        last_workout = get_last_workout(current_user.username)
+    last_workout = get_last_workout(current_user.username)
     return render_template('multitarget_workout.html', last_workout=last_workout)
 
 
@@ -191,8 +187,9 @@ def get_last_workout(user):
     for w in all_user_workouts:
         if w.id > most_recent_workout:
             most_recent_workout = w.id
-
-    workout_to_return = Workouts.query.filter_by(id = most_recent_workout)
-    return str(workout_to_return[0].targets)
+    if most_recent_workout > 0:
+        workout_to_return = Workouts.query.filter_by(id = most_recent_workout)
+        return str(workout_to_return[0].targets)
+    return 'No previous workouts.'
 
 '''app.run(debug=True)'''
