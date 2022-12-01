@@ -1,6 +1,6 @@
-# fly.toml file generated for workoutplannerzsjb on 2022-11-25T15:17:46-06:00
+# fly.toml file generated for workoutplannerjbzs on 2022-12-01T12:33:00-06:00
 
-app = "workoutplannerzsjb"
+app = "workoutplannerjbzs"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

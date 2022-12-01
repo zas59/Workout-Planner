@@ -194,4 +194,4 @@ def get_last_workout(user):
     workout_to_return = Workouts.query.filter_by(id = most_recent_workout)
     return str(workout_to_return[0].targets)
 
-app.run(debug=True)
+'''app.run(debug=True)'''
