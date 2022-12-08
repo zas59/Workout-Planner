@@ -36,7 +36,7 @@ class Workouts(db.Model):
 
 with app.app_context():
     db.create_all()
-    
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -84,7 +84,6 @@ def handle_login():
     '''Logs user in'''
     valid_users = []
     form_data = request.form
-    print(f'FORM DATA: {form_data}')
     given_username = form_data['enter_username']
     for person in People.query.all():
         valid_users.append(person.username)
@@ -183,14 +182,15 @@ def profile():
     workout_history=formatted_workout_list, logout_link=url_for('logout'))
 
 def get_last_workout(user):
+    '''Method that returns the last workout when passed a user'''
     all_user_workouts = Workouts.query.filter_by(username=user)
     most_recent_workout = 0
-    for w in all_user_workouts:
-        if w.id > most_recent_workout:
-            most_recent_workout = w.id
+    for user_workout in all_user_workouts:
+        if user_workout.id > most_recent_workout:
+            most_recent_workout = user_workout.id
     if most_recent_workout > 0:
         workout_to_return = Workouts.query.filter_by(id = most_recent_workout)
         return str(workout_to_return[0].targets)
     return 'No previous workouts.'
 
-'''app.run(debug=True)'''
+app.run()
