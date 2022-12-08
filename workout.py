@@ -1,11 +1,10 @@
 '''Workout Planning App by Zach and Jake. Name TBD, TXST SWE, EIR Laith Hasanian.'''
 import os
 from datetime import date
-from webbrowser import get
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user, user_logged_in
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -55,7 +54,7 @@ def find_workouts():
     else:
         last_workout = 'Login to see previous workout.'
     return render_template('search_workout.html', profile_link = url_for('profile'),
-    login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout)
+    login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout, user=current_user)
 
 @app.route('/login')
 def login():
@@ -72,6 +71,7 @@ def signup():
 def logout():
     '''Display logout option screen'''
     logout_user()
+    session['user'] = ''
     return render_template('logout.html')
 
 @app.route('/handle_login', methods=['POST'])

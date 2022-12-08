@@ -74,9 +74,12 @@
         </div>
     </fieldset>
     </form>
+    {%if user.is_authenticated %}
     <h2>Your last workout: {{last_workout}}</h2><br>
     <a href={{profile_link}}>Workout History (login required!)</a><br>
-    <a href={{login_link}}> Login or Sign up</a><br>
     <a href={{logout_link}}> Logout if logged in</a>
+    {%else%}
+    <a href={{login_link}}> Login or Sign up</a><br>
+    {%endif%}
 </body>
 </html>
