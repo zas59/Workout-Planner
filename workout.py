@@ -1,6 +1,7 @@
 '''Workout Planning App by Zach and Jake. Name TBD, TXST SWE, EIR Laith Hasanian.'''
 import os
 from datetime import date
+from webbrowser import get
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -49,7 +50,10 @@ def load_user(user_id):
 @app.route('/', methods=['GET', 'POST'])
 def find_workouts():
     '''Function for Landing Page'''
-    last_workout = 'Login to see previous workout.'
+    if current_user:
+        last_workout = get_last_workout(str(current_user))
+    else:
+        last_workout = 'Login to see previous workout.'
     return render_template('search_workout.html', profile_link = url_for('profile'),
     login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout)
 
@@ -91,7 +95,7 @@ def handle_login():
         this_user = People.query.filter_by(username=given_username).first()
         login_user(this_user)
         session['user'] = given_username
-        return redirect(url_for('find_workouts_logged_in'))
+        return redirect(url_for('find_workouts'))
     else:
         flash('Error: This username is does not exist')
         return redirect(url_for('login'))
