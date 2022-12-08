@@ -17,20 +17,63 @@
     {% endwith %}
     <h1 style="font-weight: bold">Find more workouts</h1>
     <form action="/handle_workout_search" method="POST">
-        <label for="targetArea">Target Area:</label>
-        <input type="text" id="targetArea" name="targetArea" value="">
-        <label for="difficulty">Difficulty:</label>
-        <input type="text" id="difficulty" name="difficulty" value=""><br>
-        <input type="submit" value="Find Workouts">
-    </form>
-    <p>Target Area Options: abdominals, abductors, adductors, biceps,</p>
-    <p>                     calves, chest, forearms, glutes, hamstrings,</p>
-    <p>                     lats, neck, quadriceps, traps, or triceps</p><br>
-
-    <p>Difficulty Options: beginner, intermediate, or expert  </p><br>
-    <form action="/end_workout" method="POST">
-        <input type="submit" value="End and Save Workout">
-    </form>
+        <fieldset>
+            <legend>Select a target area:</legend>
+            <div>
+                <input type="radio" id="target1" name="targetArea" value="abdominals"/>
+                <label for="target1">Abdominals</label>
+    
+                <input type="radio" id="target2" name="targetArea" value="abductors"/>
+                <label for="target2">Abductors</label>
+    
+                <input type="radio" id="target3" name="targetArea" value="adductors"/>
+                <label for="target3">Adductors</label>
+    
+                <input type="radio" id="target4" name="targetArea" value="biceps"/>
+                <label for="target4">Biceps</label>
+    
+                <input type="radio" id="target5" name="targetArea" value="calves"/>
+                <label for="target5">Calves</label>
+    
+                <input type="radio" id="target6" name="targetArea" value="chest"/>
+                <label for="target6">Chest</label>
+    
+                <input type="radio" id="target7" name="targetArea" value="forearms"/>
+                <label for="target7">Forearms</label>
+    
+                <input type="radio" id="target8" name="targetArea" value="glutes"/>
+                <label for="target8">Glutes</label>
+    
+                <input type="radio" id="target9" name="targetArea" value="hamstrings"/>
+                <label for="target9">Hamstrings</label>
+    
+                <input type="radio" id="target10" name="targetArea" value="lats"/>
+                <label for="target10">Lats/back</label>
+    
+                <input type="radio" id="target11" name="targetArea" value="quadriceps"/>
+                <label for="target11">Quads</label>
+    
+                <input type="radio" id="target12" name="targetArea" value="traps"/>
+                <label for="target12">Traps</label>
+    
+                <input type="radio" id="target13" name="targetArea" value="triceps"/>
+                <label for="target13">Triceps</label>
+            </div>
+            <div>
+                <input type="radio" id="dif1" name="difficulty" value="beginner"/>
+                <label for="dif1">Beginner</label>
+    
+                <input type="radio" id="dif2" name="difficulty" value="intermediate"/>
+                <label for="dif2">Intermediate</label>
+    
+                <input type="radio" id="dif3" name="difficulty" value="expert"/>
+                <label for="dif3">Expert</label>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </fieldset>
+        </form>
     <br><br>
     <h2>Your last workout: {{last_workout}}</h2>
 </body>
