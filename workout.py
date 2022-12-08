@@ -57,15 +57,6 @@ def find_workouts():
     return render_template('search_workout.html', profile_link = url_for('profile'),
     login_link=url_for('login'), logout_link=url_for('logout'), last_workout=last_workout)
 
-@app.route('/logged_in', methods=['GET', 'POST'])
-@login_required
-def find_workouts_logged_in():
-    '''Function for Landing Page if logged in'''
-    last_workout = get_last_workout(current_user.username)
-    return render_template('search_workout.html', profile_link = url_for('profile'),
-    login_link=url_for('login'), logout_link=url_for('logout'),
-    last_workout=last_workout)
-
 @app.route('/login')
 def login():
     '''Login form page'''
