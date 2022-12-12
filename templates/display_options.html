@@ -14,17 +14,20 @@
  {% for workout in results %}
     <h2>{{workout['name']}}. Equipment Needed: {{workout['equipment']}}.</h2>
  {% endfor %}
+
 <br>
 <h3>
     Store set count for muscle group below (login required!)
 </h3>
  <form action="/handle_workout_submission" method="POST">
-    <label for="target_area">Target Area: </label>
-    <input type="text" name="target_area" value="{{target_area}}" readonly><br>
-    <label for="sets">Number sets this session: </label>
+    <select name="workout">
+    {% for workout in results %}
+    <option value= "{{workout.name}}">{{workout['name']}}</option>
+    {% endfor %}<br>
+    </select><br>
+    <label for="sets">Number of sets:</label>
     <input type="text" id="sets" name="sets" value=""><br>
-    <input type="submit" value="Add Target Group"><br>
-    <button type="submit" name="index" formaction="/"> Home </button>
- </form>
+    <button type="submit">Submit</button>
+</form>
 </body>
 </html>

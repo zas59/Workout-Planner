@@ -136,10 +136,10 @@ def handle_workout_submission():
     '''Handle a users report of their workout'''
     form_data = request.form
     num_sets = form_data['sets']
-    target_area = form_data['target_area']
+    this_workout = form_data['workout']
     todays_workout = workout['today']
-    workout['today'] = f'{target_area} sets: {num_sets}. {todays_workout}'
-    flash(f'Added {target_area} to this workout.')
+    workout['today'] = f'{this_workout} sets: {num_sets}. {todays_workout}'
+    flash(f'Added {this_workout} to this workout.')
     return render_template('continue_end.html')
 
 @app.route('/continue_response', methods=['POST'])
