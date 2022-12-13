@@ -130,6 +130,29 @@ def handle_workout_search():
     return render_template('display_options.html', results = workouts_obj,
     target_area=form_data['targetArea'])
 
+@app.route('/handle_text_search', methods=['GET', 'POST'])
+def handle_text_search():
+    '''Search for and render workout suggestions.'''
+    form_data = request.form
+    api_url = 'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises'
+    api_key = os.getenv('X_API_KEY')
+    headers = {
+	"X-RapidAPI-Key": api_key,
+	"X-RapidAPI-Host": "exercises-by-api-ninjas.p.rapidapi.com"
+    }
+    querystring = {"name": form_data['search_phrase']}
+    response = requests.get(
+        api_url,
+        headers=headers,
+        params=querystring
+    )
+    json_data = response.json()
+    workouts_obj = json_data
+    for exercise in workouts_obj:
+        exercise['equipment'] = str(exercise['equipment']).replace("_", " ")
+    return render_template('display_options.html', results = workouts_obj,
+    target_area=form_data['search_phrase'])
+
 @app.route('/handle_workout_submission', methods=['GET', 'POST'])
 @login_required
 def handle_workout_submission():
