@@ -3,17 +3,18 @@
 <head>
     <style>
         body{text-align: center;}
+        h3{white-space: pre-wrap;}
     </style>
 </head>
 <body>
     <h1 style="font-weight: bold">Profile</h1>
     <h2>Username: {{username}}</h2>
     {% if workout_history %} {% for workout in workout_history %}
-    <b>{{workout}}</b><br>
+    <h3>{{workout}}</h3>
     {% endfor %} 
     {% endif %}
     <form>
-        <button type="submit" name="index" formaction="/"> Home </button><br>
+        <button type="submit" name="index" formaction="/"> Home </button><br><br>
     </form>
     
     <a href={{logout_link}}> Logout</a>

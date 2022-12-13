@@ -74,6 +74,11 @@
             </div>
         </fieldset>
         </form>
+        <form action="/handle_text_search" method="POST">
+            <label for="search_phrase">Search for workouts by name:</label>
+            <input type="text" id="search_phrase" name="search_phrase" value=""><br>
+            <input type="submit" value="Search"><br>
+        </form>
     <br><br>
     <h2>Your last workout: {{last_workout}}</h2>
 </body>
