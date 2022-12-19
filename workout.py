@@ -211,4 +211,4 @@ def get_last_workout(user):
         return str(workout_to_return[0].targets)
     return 'No previous workouts.'
 
-app.run()
+##app.run()
