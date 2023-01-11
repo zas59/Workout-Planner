@@ -161,7 +161,7 @@ def handle_workout_submission():
     num_sets = form_data['sets']
     this_workout = form_data['workout']
     todays_workout = workout['today']
-    workout['today'] = f'{this_workout} sets: {num_sets}.\n{todays_workout}'
+    workout['today'] = f'{todays_workout}\n{this_workout} sets: {num_sets}.'
     flash(f'Added {this_workout} to this workout.')
     return render_template('continue_end.html')
 
